@@ -2,34 +2,42 @@
 <html lang="en" dir="ltr">
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>NOTHING</title>
 
 		<!-- Prevent Caching -->
 		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 		<meta http-equiv="Pragma" content="no-cache"/>
 		<meta http-equiv="Expires" content="-1"/>
 
-		<link rel="stylesheet" href="/css/main.css">
+		<!-- Load Stylesheets -->
+		<link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" href="css/loadingScreen.css">
+		<link rel="stylesheet" href="css/pingSettings.css">
+		<link rel="stylesheet" href="css/gamePort.css">
+
+		<!-- Start javascript -->
+		<script src="js/lib.js" charset="utf-8"></script>
+		<script src="js/initialize.js" charset="utf-8"></script>
 	</head>
 	<body>
-		<h1>NOTHING to see here</h1>
+		<div id="gamePort" class="layer">
+
+		</div>
+
+		<div id="pingSettings" class="layer">
+			<object id="addNewItemButton" type="image/svg+xml" data="assets/newItem.svg">
+				<img src="assets/newItem.png" alt="You should get a browser with SVG support, silly!">
+			</object>
+		</div>
+
+		<div id="loadingScreen" class="layer">
+			<h1 id="gameTitle">NOTHING</h1>
+		</div>
 
 
-		<form name="submit-to-google-sheet">
+		<!-- form name="submit-to-google-sheet">
 		  <input name="email" type="email" placeholder="Email" required>
 		  <button type="submit">Send</button>
-		</form>
-
-		<script>
-		  const scriptURL = 'https://script.google.com/macros/s/AKfycbxDCXLMs7JjXIZM-4JOfVHiTndJgRuiAA8sS9FbC8gUniiB-2vG/exec'
-		  const form = document.forms['submit-to-google-sheet']
-
-		  form.addEventListener('submit', e => {
-		    e.preventDefault();
-		    fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-		      .then(response => console.log('Success!', response))
-		      .catch(error => console.error('Error!', error.message))
-		  })
-		</script>
+		</form -->
 	</body>
 </html>

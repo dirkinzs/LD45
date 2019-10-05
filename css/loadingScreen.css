@@ -1,0 +1,17 @@
+#loadingScreen {
+	background-color: black;
+	padding-top: 45vh;
+
+	/* next line is debug */
+	display: none;
+}
+
+#loadingScreen #gameTitle {
+	font-family: monospace;
+	font-weight: 100;
+	color: white;
+	font-size: 30px;
+
+	margin: auto;
+	text-align: center;
+}
