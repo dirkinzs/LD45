@@ -1,6 +1,10 @@
 (function() {
 
-	//initializePOST();
+	window.addEventListener("DOMContentLoaded", function() {
+		console.log("Initializing DOM");
+		//initializePOST();
+		initializePingPreview();
+	});
 
 	/**
 	 * @function initializePOST
@@ -15,10 +19,18 @@
 
 		  const data = new FormData();
 		  data.append("email", "apps");
-		  console.log(JSON.stringify(data));
+
 		  fetch(scriptURL, { method: 'POST', body: data})
 			.then(response => console.log('Success!', response))
 			.catch(error => console.error('Error!', error.message))
 		})
+	}
+
+
+	function initializePingPreview(){
+		const settings = document.getElementsByClassName("input");
+		for(let i = 0; i < settings.length; i++){
+			settings[i].addEventListener("change", updatePreview);
+		}
 	}
 })();

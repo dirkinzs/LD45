@@ -13,21 +13,114 @@
 		<link rel="stylesheet" href="css/main.css">
 		<link rel="stylesheet" href="css/loadingScreen.css">
 		<link rel="stylesheet" href="css/pingSettings.css">
-		<link rel="stylesheet" href="css/gamePort.css">
+		<link rel="stylesheet" href="css/viewPort.css">
 
 		<!-- Start javascript -->
 		<script src="js/lib.js" charset="utf-8"></script>
 		<script src="js/initialize.js" charset="utf-8"></script>
 	</head>
 	<body>
-		<div id="gamePort" class="layer">
+		<div id="viewPort" class="layer">
 
 		</div>
 
 		<div id="pingSettings" class="layer">
-			<object id="addNewItemButton" type="image/svg+xml" data="assets/newItem.svg">
-				<img src="assets/newItem.png" alt="You should get a browser with SVG support, silly!">
-			</object>
+
+			<div class="settingPreview">
+				<svg width="100%" height="200" class="ping preview">
+					<path class="previewPath" d="" fill="#fff" />
+					<circle r="25.4" cx="50%" cy="50%" fill="#fff"/>
+				</svg>
+			</div>
+
+			<div id="settingOptions">
+				<object id="addNewItemButton" type="image/svg+xml" data="assets/newItem.svg">
+					<img src="assets/newItem.png" alt="You should get a browser with SVG support, silly!">
+				</object>
+
+				<form class="" action="index.html" method="post">
+
+					<div class="settingSection">
+						<h2>Color</h2>
+						<div id="hslSlides" class="settingInput">
+							<label for="hueSlide">Hue</label>
+							<input type="range" min="0" max="359" value="145" class="slider input" id="hueSlide">
+							<label for="saturationSlide">Saturation</label>
+							<input type="range" min="0" max="100" value="100" class="slider input" id="saturationSlide">
+							<label for="lightSlide">Lightness</label>
+							<input type="range" min="0" max="100" value="100" class="slider input" id="lightSlide">
+						</div>
+					</div>
+
+					<div class="settingSection">
+						<h2>Shape</h2>
+						<div id="" class="settingInput">
+							<select class=" input" name="">
+								<option value="op1">op1</option>
+								<option value="op2">option 2</option>
+								<option value="op3">option 3</option>
+								<option value="op4">Option 4</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="settingSection">
+						<h2>Size</h2>
+						<div id="" class="settingInput">
+								<label for="radiusSlide">Radius</label>
+							<input type="range" min="50" max="100" value="75" class="slider input" id="radiusSlide">
+								<label for="amplitudeSlide">Amplitude</label>
+							<input type="range" min="0" max="40" value="10" class="slider input" id="amplitudeSlide">
+								<label for="frequencySlide">Frequency</label>
+							<input type="range" min="4" max="20" step="1" value="8" class="slider input" id="frequencySlide">
+								<label for="frequencySlide">Precision</label>
+							<input type="range" min="1" max="8" step="1" value="8" class="slider input" id="precisionSlide">
+						</div>
+					</div>
+
+					<div class="settingSection">
+						<h2>Animation</h2>
+						<div id="" class="settingInput">
+							<select class=" input" name="">
+								<option value="anim1">Animation 1</option>
+								<option value="anim2">Animation 2</option>
+								<option value="anim3">Animation 3</option>
+								<option value="anim4">Animation 4</option>
+							</select>
+							<input type="range" min="0" max="50" value="10" class="slider input" id="animSpeedSlide">
+							<input type="range" min="10" max="200" value="30" class="slider input" id="animDelaySlide">
+						</div>
+					</div>
+
+					<div class="settingSection">
+						<h2>Sound</h2>
+						<div id="" class="settingInput">
+							<select class=" input" name="">
+								<option value="sound1">Sound 1</option>
+								<option value="sound1">Sound 1</option>
+								<option value="sound1">Sound 1</option>
+								<option value="sound1">Sound 1</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="settingSection">
+						<h2>Text</h2>
+						<div id="" class="settingInput">
+							<input type="text" name="" value="Anonymous" class=" input">
+							<label for="hueSlide">Hue</label>
+							<input type="range" min="0" max="359" value="145" class="slider input" id="hueSlide">
+							<label for="saturationSlide">Saturation</label>
+							<input type="range" min="0" max="100" value="100" class="slider input" id="saturationSlide">
+							<label for="lightSlide">Lightness</label>
+							<input type="range" min="0" max="100" value="100" class="slider input" id="lightSlide">
+						</div>
+					</div>
+				</form>
+			</div>
+
+
+
 		</div>
 
 		<div id="loadingScreen" class="layer">
