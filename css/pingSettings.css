@@ -1,5 +1,6 @@
 #pingSettings {
 	border: white solid 2px;
+	background-color: black;
 
 	width: 100vw;
 	height: 100vh;
@@ -22,6 +23,10 @@
 	width: 100%;
 	padding: 10px 20%;
 	text-align: center;
+}
+
+.hidden {
+	display: none;
 }
 
 /**********************************************/

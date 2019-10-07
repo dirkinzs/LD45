@@ -24,22 +24,39 @@ function saveLocalPing(pingObject) {
 ///////////////////////////////////////////////////////
 //      Viewport & local ping display                //
 ///////////////////////////////////////////////////////
+function animationWait(e) {
+    let ping = e.target;
+    ping.style.animationPlayState = "paused";
+    setTimeout(function() {
+        ping.style.animationPlayState = "running";
+    }, savedPingData.pings[ping.id].animation.delay * 1000);
+}
+
+let pingLocked = false;
+
 function createPing(event) {
-    console.log(`the mouse was clicked at (${event.clientX},${event.clientY})`);
-    let newPing = getSettingsObject();
+    if(hasEdited && !pingLocked && pingsRemaining > 0)
+    {
+        pingsRemaining--;
+        pingLocked = true;
+        setTimeout(function() {pingLocked = false;}, 3000);
+        console.log(`the mouse was clicked at (${event.clientX},${event.clientY})`);
+        let newPing = getSettingsObject();
 
-    newPing.pos.x = event.clientX;
-    newPing.pos.y = event.clientY;
+        newPing.pos.x = event.clientX;
+        newPing.pos.y = event.clientY;
 
-    saveLocalPing(newPing);
-    putPingData();
+        saveLocalPing(newPing);
+        putPingData();
 
-    updateViewPort();
+        updateViewPort();
+    }
 }
 
 //call this to update the display of pings
 function updateViewPort() {
     let viewPort = document.getElementById("viewPort");
+
     for(let ping in savedPingData.pings) {
         if(!document.getElementById(savedPingData.pings[ping].id)) {
             let newPingEl = createPingElement(savedPingData.pings[ping]);
@@ -77,6 +94,17 @@ function createPingElement(pingObject) {
     style.left = pingObject.pos.x - maxPingSize / 2;
     style.top = pingObject.pos.y - maxPingSize / 2;
 
+    //let del = Math.random() * 4
+    //del = del.toFixed(4);
+    //console.log("Del" + del);
+    //style.animationDelay = toString(del) + "s";
+    pingEl.svg.addEventListener("animationiteration", animationWait);
+    style.animationName = pingObject.animation.name;
+    style.animationDuration = pingObject.animation.speed + "s";
+    style.animationIterationCount = "infinite";
+
+    pingEl.svg.id = pingObject.id
+
     return pingEl.svg;
 }
 
@@ -93,6 +121,7 @@ function toggleSettingMenu() {
         pingMenu.style.left = "100%";
         toggleButton.style.left = "-105px";
         toggleButton.style.transform = "rotate(0deg)";
+        hasEdited = true;
     } else {
         pingMenu.style.left = "0%";
         toggleButton.style.left = "5px";
@@ -182,6 +211,7 @@ function getAllPingData() {
 //            User Identification                    //
 ///////////////////////////////////////////////////////
 let pingsRemaining = 5;
+let thisUserId = "";
 const uidName = "specialUserId"
 
 function getNewUserId() {
@@ -213,8 +243,14 @@ function validateUser() {
     if(cookies.includes(uidName)) {
         pingsRemaining = getCookie("pingsRemaining");
     } else {
-        document.cookies = `${uidName}=${getNewUserId}; pingsRemaining=5; expires=Thu, 18 Dec 2022 12:00:00 UTC`
+        thisUserId = getNewUserId();
+        pingsRemaining = 3;
+        document.cookies = `${uidName}=${thisUserId}; pingsRemaining=${pingsRemaining}; expires=Thu, 18 Dec 2022 12:00:00 UTC`
     }
+}
+
+function setPingCookie() {
+    document.cookies = `${uidName}=${thisUserId}; pingsRemaining=${pingsRemaining}; expires=Thu, 18 Dec 2022 12:00:00 UTC`
 }
 
 function getCookie(cname) {
@@ -241,9 +277,15 @@ function getPingSetting(name) {
 	const form = document.querySelector("#settingOptions form");
 	setting = document.getElementById(name);
 
-	if(setting) {
+    console.log("setting" + setting.tagName);
+
+	if(setting && setting.tagName != "SELECT") {
+        console.log("setting is not select");
 		return Number(setting.value);
-	} else {
+	} else if (setting && setting.tagName === "SELECT") {
+        console.log("setting is select - " + setting.options[setting.selectedIndex].value);
+        return setting.options[setting.selectedIndex].value;
+    } else {
 		console.log("Setting request for " + name + " was not found");
 		return false;
 	}
@@ -261,7 +303,7 @@ function getSettingsObject() {
     };
     setObj.animation = {
         name: getPingSetting("animationSelect"),
-        speed: getPingSetting("animSpeedSlide"),
+        speed: document.getElementById("animSpeedSlide").getAttribute("max") - getPingSetting("animSpeedSlide"),
         delay: getPingSetting("animDelaySlide")
     };
     setObj.sound = getPingSetting("soundSelect")
@@ -276,6 +318,7 @@ function getSettingsObject() {
     let d = new Date();
     setObj.time = d.getTime();
     setObj.id = getNewPingId();
+    setObj.userId = thisUserId;
 
     return setObj;
 }
@@ -314,4 +357,5 @@ function updatePreview() {
         //update Color
         paths[0].style.fill = `hsl(${getPingSetting("hueSlide")}, ${getPingSetting("saturationSlide")}%, ${getPingSetting("lightSlide")}%)`
     }
+
 }

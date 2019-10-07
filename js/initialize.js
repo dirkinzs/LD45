@@ -2,6 +2,7 @@ let savedPingData = {};
 let loading = true;
 let putting = false;
 const maxPingSize = 150;
+let hasEdited = false;
 
 window.addEventListener("DOMContentLoaded", function() {
 	console.log("Initializing DOM");
@@ -12,6 +13,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		console.log("savedPingData: " + JSON.stringify(savedPingData));
 		initializeViewPort();
 	});
+	hideUnfinishedSettings();
 });
 
 
@@ -23,7 +25,17 @@ function initializePingPreview(){
 }
 
 function initializeViewPort() {
-	document.getElementById("viewPort").addEventListener("click", createPing);
-	updateViewPort();
-	loading = false;
+updateViewPort();
+	setTimeout(function() {
+		document.getElementById("viewPort").addEventListener("click", createPing);
+		loading = false;
+		document.getElementById("loadingScreen").style.opacity = 0;
+		document.getElementById("loadingScreen").style.pointerEvents = "none";
+
+
+	}, 4000);
+}
+
+function hideUnfinishedSettings() {
+
 }

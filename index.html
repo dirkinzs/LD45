@@ -14,6 +14,7 @@
 		<link rel="stylesheet" href="css/loadingScreen.css">
 		<link rel="stylesheet" href="css/pingSettings.css">
 		<link rel="stylesheet" href="css/viewPort.css">
+		<link rel="stylesheet" href="css/animations.css">
 
 		<!-- Start javascript -->
 		<script src="js/lib.js" charset="utf-8"></script>
@@ -67,17 +68,20 @@
 						<h2>Animation</h2>
 						<div id="" class="settingInput">
 							<select class=" input" name="" id="animationSelect">
-								<option value="anim1">Animation 1</option>
-								<option value="anim2">Animation 2</option>
-								<option value="anim3">Animation 3</option>
-								<option value="anim4">Animation 4</option>
+								<option value="spin">Spining</option>
+								<option value="pulse">Pulsing</option>
+								<option value="heartbeat">Heartbeat</option>
+								<option value="fade">Fade out</option>
+								<option value="pulseNspin">Pulse and Spin</option>
 							</select>
-							<input type="range" min="0" max="50" value="10" class="slider input" id="animSpeedSlide">
-							<input type="range" min="10" max="200" value="30" class="slider input" id="animDelaySlide">
+								<label for="animSpeedSlide">Animation Speed</label>
+							<input type="range" min=".5" max="10" value="1" class="slider input" id="animSpeedSlide">
+								<label for="animDelaySlide">Animation Delay</label>
+							<input type="range" min="0" max="6" value="2" class="slider input" id="animDelaySlide">
 						</div>
 					</div>
 
-					<div class="settingSection">
+					<div class="settingSection hidden">
 						<h2>Sound</h2>
 						<div id="" class="settingInput">
 							<select class=" input" name="" id="soundSelect">
@@ -89,7 +93,7 @@
 						</div>
 					</div>
 
-					<div class="settingSection">
+					<div class="settingSection hidden">
 						<h2>Text</h2>
 						<div id="" class="settingInput">
 							<input type="text" name="" value="Anonymous" class=" input" id="textInput">
@@ -113,7 +117,7 @@
 		</div>
 
 		<div id="loadingScreen" class="layer">
-			<h1 id="gameTitle">NOTHING</h1>
+			<h1 id="gameTitle">FIRST THERE WAS NOTHING</h1>
 		</div>
 
 
