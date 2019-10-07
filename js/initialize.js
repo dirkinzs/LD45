@@ -5,7 +5,7 @@
 		//initializePOST();
 		initializePingPreview();
 		updatePreview();
-		testingSpreadsheetAccess();
+		//testingSpreadsheetAccess();
 	});
 
 	/**
