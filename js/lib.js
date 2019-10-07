@@ -71,7 +71,7 @@ function dbSendPing(pingData) {
 function putPingData() {
     fetch(pingDataUri, {
         method: "PUT",
-        body: JSON.stringify({moreData: getNewId()}),
+        body: JSON.stringify({moreData: "zoop"}),
         headers: new Headers({
           'Content-Type': 'application/json'
         }),

@@ -6,6 +6,7 @@
 		initializePingPreview();
 		updatePreview();
 		//testingSpreadsheetAccess();
+		console.log(getAllPingData());
 	});
 
 	/**
