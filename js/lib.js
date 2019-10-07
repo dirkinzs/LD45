@@ -35,6 +35,7 @@ function toggleSettingMenu() {
     }
 
     menuOpen = !menuOpen;
+    putPingData();
 }
 
 
@@ -43,6 +44,7 @@ function toggleSettingMenu() {
 ///////////////////////////////////////////////////////
 //         Interact with database                    //
 ///////////////////////////////////////////////////////
+const pingDataUri = "https://api.myjson.com/bins/14ukpn";
 function dbSendPing(pingData) {
     const data = new FormData();
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxDCXLMs7JjXIZM-4JOfVHiTndJgRuiAA8sS9FbC8gUniiB-2vG/exec';
@@ -64,6 +66,27 @@ function dbSendPing(pingData) {
     fetch(scriptURL, { method: 'POST', body: data})
         .then(response => console.log('Success!', response))
         .catch(error => console.error('Error!', error.message))
+}
+
+function putPingData() {
+    fetch(pingDataUri, {
+        method: "PUT",
+        body: JSON.stringify({moreData: getNewId()}),
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+    })
+    .then(response => response.json())
+    .then(data => { console.log(data) })
+    .catch(error => console.error(error));
+}
+
+function getAllPingData() {
+    fetch(pingDataUri)
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        }).catch(error => console.error(error));
 }
 
 ///////////////////////////////////////////////////////
