@@ -85,6 +85,8 @@ function getAllPingData() {
     fetch(pingDataUri)
         .then(response => response.json())
         .then(data => {
+            console.log(data);
+            console.log(JSON.stringify(data));
             return data;
         }).catch(error => console.error(error));
 }
