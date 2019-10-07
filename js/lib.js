@@ -13,7 +13,72 @@ function testLib() {
 }
 
 
+///////////////////////////////////////////////////////
+//              Local Ping Storage                   //
+///////////////////////////////////////////////////////
+function saveLocalPing(pingObject) {
+    savedPingData.pings[pingObject.id] = pingObject;
+}
 
+
+///////////////////////////////////////////////////////
+//      Viewport & local ping display                //
+///////////////////////////////////////////////////////
+function createPing(event) {
+    console.log(`the mouse was clicked at (${event.clientX},${event.clientY})`);
+    let newPing = getSettingsObject();
+
+    newPing.pos.x = event.clientX;
+    newPing.pos.y = event.clientY;
+
+    saveLocalPing(newPing);
+    putPingData();
+
+    updateViewPort();
+}
+
+//call this to update the display of pings
+function updateViewPort() {
+    let viewPort = document.getElementById("viewPort");
+    for(let ping in savedPingData.pings) {
+        if(!document.getElementById(savedPingData.pings[ping].id)) {
+            let newPingEl = createPingElement(savedPingData.pings[ping]);
+            console.log(newPingEl);
+            viewPort.appendChild(newPingEl);
+        }
+    }
+}
+
+function createPingElement(pingObject) {
+    let pingEl = {};
+    pingEl.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    pingEl.ping = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    pingEl.text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+    pingEl.svg.appendChild(pingEl.ping);
+    pingEl.svg.appendChild(pingEl.text);
+
+    pingEl.svg.setAttribute("width", maxPingSize + "px");
+    pingEl.svg.setAttribute("height", maxPingSize + "px");
+    pingEl.svg.setAttribute("preserveAspectRatio", "xMidYMin")
+
+    pingEl.ping.style.fill = pingObject.color;
+    pingEl.ping.setAttribute("d", getPingDimensions(
+        pingObject.shape.radius,
+        pingObject.shape.amplitude,
+        pingObject.shape.frequency,
+        maxPingSize / 2,
+        maxPingSize / 2,
+        pingObject.shape.precision
+    ));
+
+    let style = pingEl.svg.style;
+    style.position = "absolute";
+    style.left = pingObject.pos.x - maxPingSize / 2;
+    style.top = pingObject.pos.y - maxPingSize / 2;
+
+    return pingEl.svg;
+}
 
 ///////////////////////////////////////////////////////
 //                UI Manipulation                    //
@@ -35,7 +100,6 @@ function toggleSettingMenu() {
     }
 
     menuOpen = !menuOpen;
-    putPingData();
 }
 
 
@@ -44,51 +108,74 @@ function toggleSettingMenu() {
 ///////////////////////////////////////////////////////
 //         Interact with database                    //
 ///////////////////////////////////////////////////////
-const pingDataUri = "https://api.myjson.com/bins/14ukpn";
-function dbSendPing(pingData) {
-    const data = new FormData();
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxDCXLMs7JjXIZM-4JOfVHiTndJgRuiAA8sS9FbC8gUniiB-2vG/exec';
-
-    data.append("color", pingData.color);
-    data.append("pos.x", pingData.pos.x);
-    data.append("pos.y", pingData.pos.y);
-    data.append("shape.radius", pingData.shape.radius);
-    data.append("shape.amplitude", pingData.shape.amplitude);
-    data.append("shape.frequency", pingData.shape.frequency);
-    data.append("shape.precision", pingData.shape.precision);
-    data.append("animation.name", pingData.animation.name);
-    data.append("animation.speed", pingData.animation.name);
-    data.append("animation.delay", pingData.animation.delay);
-    data.append("text.content", pingData.text.content);
-    data.append("text.color", pingData.text.color);
-    data.append("sound", pingData.sound);
-
-    fetch(scriptURL, { method: 'POST', body: data})
-        .then(response => console.log('Success!', response))
-        .catch(error => console.error('Error!', error.message))
-}
+const pingDataUri = "https://api.myjson.com/bins/gmg3v";
 
 function putPingData() {
-    fetch(pingDataUri, {
-        method: "PUT",
-        body: JSON.stringify({moreData: "zoop"}),
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        }),
-    })
-    .then(response => response.json())
-    .then(data => { console.log(data) })
-    .catch(error => console.error(error));
+
+    if(!putting)
+    {
+        putting = true
+
+        getAllPingData().then(response => {
+            let oldPingData = response;
+
+            console.log("Updating data");
+            console.log("old db data:");
+            console.log(oldPingData);
+            console.log("saved ping data:");
+            console.log(savedPingData);
+
+            let newUsers = savedPingData.userIds;
+            oldPingData.userIds.forEach(function(userId) {
+                if(!newUsers.includes(userId)) {
+                    newUsers.push(userId);
+                }
+            });
+
+            let newPings = savedPingData.pings;
+            for(let ping in oldPingData.pings) {
+                if(!newPings.hasOwnProperty(ping)) {
+                    newPings[ping.id] = ping;
+                }
+            }
+
+            let newPingData = {
+                userIds: newUsers,
+                pings: newPings
+            }
+
+            console.log("newPingData:");
+            console.log(newPingData);
+
+            fetch(pingDataUri, {
+                method: "PUT",
+                body: JSON.stringify(savedPingData),
+                headers: new Headers({
+                  'Content-Type': 'application/json'
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("data was put" + JSON.stringify(data));
+                putting = false;
+            })
+            .catch(error => {
+                console.error(error);
+                putting = false;
+            });
+        });
+    }
+
 }
 
 function getAllPingData() {
-    fetch(pingDataUri)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            console.log(JSON.stringify(data));
-            return data;
-        }).catch(error => console.error(error));
+    return new Promise(function(resolve, reject) {
+        fetch(pingDataUri)
+            .then(response => response.json())
+            .then(data => {
+                resolve(data)
+            }).catch(error => reject(Error(data.statusText)));
+    });
 }
 
 ///////////////////////////////////////////////////////
@@ -97,9 +184,27 @@ function getAllPingData() {
 let pingsRemaining = 5;
 const uidName = "specialUserId"
 
-function getNewId() {
-    let id = Math.random().toFixed(10).toString();
-    id = id.substr(2);
+function getNewUserId() {
+    let id = -1;
+    do {
+        id = Math.random().toFixed(10).toString();
+        id = id.substr(2);
+        console.log("new id= " + id);
+    }
+    while(savedPingData.userIds.includes(id));
+    return id;
+}
+
+function getNewPingId() {
+    let id = -1;
+    console.log("getting new ping id");
+    console.log(savedPingData);
+    do {
+        id = Math.random().toFixed(10).toString();
+        id = id.substr(2);
+    }
+    while(savedPingData.pings.hasOwnProperty(id));
+    console.log("new id= " + id);
     return id;
 }
 
@@ -108,7 +213,7 @@ function validateUser() {
     if(cookies.includes(uidName)) {
         pingsRemaining = getCookie("pingsRemaining");
     } else {
-        document.cookies = `${uidName}=${getNewId}; pingsRemaining=5; expires=Thu, 18 Dec 2022 12:00:00 UTC`
+        document.cookies = `${uidName}=${getNewUserId}; pingsRemaining=5; expires=Thu, 18 Dec 2022 12:00:00 UTC`
     }
 }
 
@@ -168,6 +273,9 @@ function getSettingsObject() {
         x: 500,
         y: 500
     }
+    let d = new Date();
+    setObj.time = d.getTime();
+    setObj.id = getNewPingId();
 
     return setObj;
 }
@@ -178,7 +286,7 @@ function getSettingsObject() {
 ///////////////////////////////////////////////////////
 function getPingDimensions(r, a, n, cx, cy, precision){
 	let dims = ""
-	console.log("getting dims");
+
     let theta = 0;
 
 	for(let i = 0; i <= n * precision; i++){
