@@ -37,7 +37,7 @@
 	}
 
 	function testingSpreadsheetAccess() {
-		const sheetURL = "https://sheets.googleapis.com/v4/spreadsheets/187xIFM7MPciWJ8GaVKaVwm-mH1DGog-MYg96RiB1TZA"
+		const sheetURL = "https://cors-anywhere.herokuapp.com/https://sheets.googleapis.com/v4/spreadsheets/187xIFM7MPciWJ8GaVKaVwm-mH1DGog-MYg96RiB1TZA"
 		fetch(sheetURL, {method: "GET", cache: "no-store"})
 		.then(function(response) {
 			console.log(response);
