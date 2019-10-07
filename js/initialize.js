@@ -4,6 +4,8 @@
 		console.log("Initializing DOM");
 		//initializePOST();
 		initializePingPreview();
+		updatePreview();
+		testingSpreadsheetAccess();
 	});
 
 	/**
@@ -33,4 +35,16 @@
 			settings[i].addEventListener("change", updatePreview);
 		}
 	}
+
+	function testingSpreadsheetAccess() {
+		const sheetURL = "https://sheets.googleapis.com/v4/spreadsheets/187xIFM7MPciWJ8GaVKaVwm-mH1DGog-MYg96RiB1TZA"
+		fetch(sheetURL, {method: "GET", cache: "no-store"})
+		.then(function(response) {
+			console.log(response);
+		}).catch(function(response) {
+			console.log(response);
+		});
+	}
+
+
 })();
